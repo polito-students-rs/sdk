@@ -1,0 +1,33 @@
+name: Spec sync check
+on:
+  schedule:
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+jobs:
+  check-spec:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download upstream spec
+        run: |
+          curl -sL -o /tmp/upstream.yaml \
+            https://raw.githubusercontent.com/polito/api-spec/master/dist/clients/student/openapi.yaml
+
+      - name: Diff against vendored spec
+        id: diff
+        run: |
+          if ! diff -q spec/openapi.yaml /tmp/upstream.yaml > /dev/null; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open PR with updated spec
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "chore: sync upstream openapi spec"
+          title: "Upstream OpenAPI spec changed"
+          body: "Upstream spec has been changed. Updated models if needed"
+          branch: spec-update
+          add-paths: spec/openapi.yaml

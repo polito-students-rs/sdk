@@ -1,0 +1,8 @@
+/target
+
+*.txt
+
+.env
+
+/design
+/ref
