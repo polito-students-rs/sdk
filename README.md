@@ -1,1 +1,1 @@
-# polito-students-core
+# polito-students-sdk
