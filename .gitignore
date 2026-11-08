@@ -4,5 +4,6 @@
 
 .env
 
-/design
-/ref
+/node_modules
+
+/build

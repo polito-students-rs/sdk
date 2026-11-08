@@ -1,0 +1,17 @@
+{
+  "name": "sdk",
+  "version": "0.1.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.42.0"
+  },
+  "allowScripts": {
+    "@openapitools/openapi-generator-cli@2.42.0": true
+  }
+}
