@@ -1,33 +1,62 @@
-name: Spec sync check
+name: Spec sync
 on:
-  schedule:
-    - cron: '0 6 * * 1'
+  schedule: [{ cron: '0 6 * * 1' }]
   workflow_dispatch:
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
-  check-spec:
+  sync:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - name: Download upstream spec
-        run: |
-          curl -sL -o /tmp/upstream.yaml \
-            https://raw.githubusercontent.com/polito/api-spec/master/dist/clients/student/openapi.yaml
+        run: curl -sL -o spec/openapi.yaml "$SPEC_URL"
+        env:
+          SPEC_URL: https://raw.githubusercontent.com/polito/api-spec/master/dist/clients/student/openapi.yaml
 
-      - name: Diff against vendored spec
+      - name: Detect semantic change
         id: diff
         run: |
-          if ! diff -q spec/openapi.yaml /tmp/upstream.yaml > /dev/null; then
-            echo "changed=true" >> "$GITHUB_OUTPUT"
+          if git diff --quiet -- spec/openapi.yaml; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true"  >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Open PR with updated spec
+      - uses: dtolnay/rust-toolchain@stable
+        if: steps.diff.outputs.changed == 'true'
+      - uses: actions/setup-node@v4
+        if: steps.diff.outputs.changed == 'true'
+      - uses: extractions/setup-just@v4
+        if: steps.diff.outputs.changed == 'true'
+
+      - name: Regenerate bindings
+        if: steps.diff.outputs.changed == 'true'
+        run: just codegen
+
+      - name: Build detecting breaking changes
+        id: build
+        if: steps.diff.outputs.changed == 'true'
+        run: cargo build -p polito-client
+        continue-on-error: true
+
+      - name: Open PR
         if: steps.diff.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v6
         with:
+          token: ${{ secrets.SYNC_PAT }}   # PAT, così scatta la CI sul PR
           commit-message: "chore: sync upstream openapi spec"
           title: "Upstream OpenAPI spec changed"
-          body: "Upstream spec has been changed. Updated models if needed"
+          body: |
+            Spec has been changed. Regenerated bindings.
+            polito-client build: ${{ steps.build.outcome }}
+            ${{ steps.build.outcome == 'failure' && '⚠️ update From/TryFrom' || '✅ no detected breaking' }}
           branch: spec-update
-          add-paths: spec/openapi.yaml
+          add-paths: |
+            spec/openapi.yaml
+            crates/polito-openapi/**
+          labels: ${{ steps.build.outcome == 'failure' && 'breaking' || 'automated' }}
