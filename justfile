@@ -1,4 +1,5 @@
 import 'dev/linux/linux.just'
+import 'dev/windows/windows.just'
 
 # generate crates/polito-api from spec/openapi.yaml (uses local node_modules)
 [group("gen")]
@@ -16,10 +17,6 @@ publish-check:
 
 build: check
     cargo build -r
-
-clean:
-    rm -rf node_modules
-    cargo clean
 
 # test ci pipelines locally
 [group("ci")]
