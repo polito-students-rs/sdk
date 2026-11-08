@@ -1,0 +1,17 @@
+'!include': 'shared/common.yml'
+generatorName: rust
+inputSpec: 'spec/openapi.yaml'
+outputDir: 'crates/polito-api'
+templateDir: 'spec/templates'
+additionalProperties:
+  library: 'reqwest-trait'
+  mockall: "true"
+  packageVersion: "{{package_version}}"
+  packageName: "polito-api"
+  topLevelApiClient: "true"
+  supportMiddleware: "true"
+  packageDescription: "API bindings for the polito students API."
+openapiGeneratorIgnoreList:
+  - .travis.yml
+  - git_push.sh
+  - .gitignore

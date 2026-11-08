@@ -1,0 +1,5 @@
+globalProperties:
+  apiDocs: "false"
+  modelDocs: "false"
+  apiTests: "false"
+  modelTests: "false"
