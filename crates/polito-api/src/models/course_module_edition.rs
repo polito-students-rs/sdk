@@ -15,14 +15,17 @@ use serde::{Deserialize, Serialize};
 pub struct CourseModuleEdition {
     #[serde(rename = "year")]
     pub year: String,
+    #[serde(rename = "name")]
+    pub name: String,
     #[serde(rename = "id")]
     pub id: i32,
 }
 
 impl CourseModuleEdition {
-    pub fn new(year: String, id: i32) -> CourseModuleEdition {
+    pub fn new(year: String, name: String, id: i32) -> CourseModuleEdition {
         CourseModuleEdition {
             year,
+            name,
             id,
         }
     }

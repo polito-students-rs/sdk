@@ -1038,6 +1038,7 @@ paths:
     patch:
       operationId: Courses_updateAssignment
       summary: Update assignment | Aggiorna elaborato
+      description: Withdraws the assignment if `deletedAt` is set to a date, restores it if `deletedAt` is `null`.
       parameters:
         - name: courseId
           in: path
@@ -3406,40 +3407,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Student
-  /surveys:
-    get:
-      operationId: Surveys_getSurveys
-      summary: Get surveys | Mostra survey
-      parameters: []
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Survey'
-                required:
-                  - data
-        '400':
-          description: The server could not understand the request due to invalid syntax.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      tags:
-        - Surveys
-  /ticket-faqs:
+  /student/ticket-faqs:
     get:
       operationId: TicketFAQs_searchTicketFAQs
       summary: Search ticket FAQs | Ricerca FAQ ticket
@@ -3488,7 +3456,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Tickets
-  /ticket-topics:
+  /student/ticket-topics:
     get:
       operationId: TicketTopics_getTicketTopics
       summary: List ticket topics | Elenca ambiti ticket
@@ -3521,7 +3489,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Tickets
-  /tickets:
+  /student/tickets:
     get:
       operationId: Tickets_getTickets
       summary: List tickets | Elenca ticket
@@ -3590,7 +3558,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/CreateTicketRequest'
-  /tickets/{ticketId}:
+  /student/tickets/{ticketId}:
     get:
       operationId: Tickets_getTicket
       summary: Show a ticket | Mostra un ticket
@@ -3626,7 +3594,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Tickets
-  /tickets/{ticketId}/attachments/{attachmentId}:
+  /student/tickets/{ticketId}/attachments/{attachmentId}:
     get:
       operationId: Tickets_getTicketAttachment
       summary: Download ticket attachment | Scarica allegato del ticket
@@ -3667,10 +3635,10 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Tickets
-  /tickets/{ticketId}/close:
-    put:
-      operationId: Tickets_markTicketAsClosed
-      summary: Mark a ticket as closed | Segna un ticket come chiuso
+  /student/tickets/{ticketId}/feedback:
+    post:
+      operationId: Tickets_provideTicketFeedback
+      summary: Provide feedback about a ticket | Fornisci feedback su un ticket
       parameters:
         - name: ticketId
           in: path
@@ -3694,7 +3662,13 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Tickets
-  /tickets/{ticketId}/read:
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TicketFeedbackRequest'
+  /student/tickets/{ticketId}/read:
     put:
       operationId: Tickets_markTicketAsRead
       summary: Mark a ticket as read | Segna un ticket come letto
@@ -3721,7 +3695,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Tickets
-  /tickets/{ticketId}/replies:
+  /student/tickets/{ticketId}/replies:
     post:
       operationId: Tickets_replyToTicket
       summary: Reply to a ticket | Rispondi ad un ticket
@@ -3754,7 +3728,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/ReplyTicketRequest'
-  /tickets/{ticketId}/replies/{replyId}/attachments/{attachmentId}:
+  /student/tickets/{ticketId}/replies/{replyId}/attachments/{attachmentId}:
     get:
       operationId: Tickets_getTicketReplyAttachment
       summary: Download ticket reply attachment | Scarica allegato di una risposta al ticket
@@ -3800,10 +3774,10 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Tickets
-  /tickets/{ticketId}/replies/{replyId}/feedback:
+  /student/tickets/{ticketId}/replies/{replyId}/feedback:
     put:
       operationId: Tickets_setTicketReplyFeedback
-      summary: Give feedback on a ticket reply | Fornisci feedback su una risposta al ticket
+      summary: Give feedback on the bot reply | Fornisci feedback sulla risposta del bot
       parameters:
         - name: ticketId
           in: path
@@ -3838,6 +3812,66 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Tickets
+  /student/tickets/{ticketId}/resolve:
+    put:
+      operationId: Tickets_markTicketAsClosed
+      summary: Mark a ticket as resolved | Segna un ticket come risolto
+      parameters:
+        - name: ticketId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Tickets
+  /surveys:
+    get:
+      operationId: Surveys_getSurveys
+      summary: Get surveys | Mostra survey
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Survey'
+                required:
+                  - data
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Surveys
   /unreadEmails:
     get:
       operationId: StudentNs_getUnreadEmailsNumber
@@ -3899,8 +3933,13 @@ paths:
                     teacherName: Stefano Quer
                     previousEditions: []
                     isOverBooking: false
+                    category: I
                     enrollmentRole: student
                     year: '2025'
+                    style:
+                      color: '#2563EB'
+                      icon: faCode
+                      label: SDP
                     modules:
                       - id: 251008
                         name: Programming Module A
@@ -3910,10 +3949,16 @@ paths:
                         teacherName: Mario Rossi
                         previousEditions:
                           - id: 251005
+                            name: Programming Module A
                             year: '2024'
                         isOverBooking: false
+                        category: I
                         enrollmentRole: student
                         year: '2025'
+                        style:
+                          color: '#4F46E5'
+                          icon: faCode
+                          label: SDP-A
                       - id: 251009
                         name: Programming Module B
                         shortcode: 01NYHOV
@@ -3922,10 +3967,16 @@ paths:
                         teacherName: Giovanni Verdi
                         previousEditions:
                           - id: 251006
+                            name: Programming Module B
                             year: '2024'
                         isOverBooking: false
+                        category: I
                         enrollmentRole: student
                         year: '2025'
+                        style:
+                          color: '#7C3AED'
+                          icon: faCode
+                          label: SDP-B
                   - id: 252121
                     name: Web Applications II
                     shortcode: 01TXSOV
@@ -3935,8 +3986,13 @@ paths:
                     teacherName: Giovanni Malnati
                     previousEditions: []
                     isOverBooking: false
+                    category: I
                     enrollmentRole: student
                     year: '2025'
+                    style:
+                      color: '#0891B2'
+                      icon: faGlobe
+                      label: WA2
                     modules: null
                   - id: 252126
                     name: Security verification and testing
@@ -3947,8 +4003,13 @@ paths:
                     teacherName: Riccardo Sisto
                     previousEditions: []
                     isOverBooking: false
+                    category: I
                     enrollmentRole: student
                     year: '2025'
+                    style:
+                      color: '#16A34A'
+                      icon: faShieldHalved
+                      label: SVT
                     modules: null
                   - id: 252138
                     name: Information systems security
@@ -3959,8 +4020,13 @@ paths:
                     teacherName: Antonio Lioy
                     previousEditions: []
                     isOverBooking: false
+                    category: I
                     enrollmentRole: student
                     year: '2025'
+                    style:
+                      color: '#DC2626'
+                      icon: faServer
+                      label: ISS
                     modules: null
                   - id: 252258
                     name: Cybersecurity
@@ -3971,8 +4037,13 @@ paths:
                     teacherName: Antonio Lioy
                     previousEditions: []
                     isOverBooking: false
+                    category: I
                     enrollmentRole: student
                     year: '2025'
+                    style:
+                      color: '#EA580C'
+                      icon: faNetworkWired
+                      label: CYB
                     modules: null
                   - id: 252788
                     name: Architetture dei sistemi di elaborazione
@@ -3983,8 +4054,13 @@ paths:
                     teacherName: Edgar Ernesto Sanchez Sanchez
                     previousEditions: []
                     isOverBooking: false
+                    category: I
                     enrollmentRole: student
                     year: '2025'
+                    style:
+                      color: '#D97706'
+                      icon: faMicrochip
+                      label: ASE
                     modules: null
                   - id: 252842
                     name: Human Computer Interaction
@@ -3995,8 +4071,13 @@ paths:
                     teacherName: Luigi De Russis
                     previousEditions: []
                     isOverBooking: false
+                    category: I
                     enrollmentRole: student
                     year: '2025'
+                    style:
+                      color: '#DB2777'
+                      icon: faComputer
+                      label: HCI
                     modules: null
                   - id: 253378
                     name: Cryptography
@@ -4007,8 +4088,13 @@ paths:
                     teacherName: Antonio Jose Di Scala
                     previousEditions: []
                     isOverBooking: false
+                    category: I
                     enrollmentRole: student
                     year: '2025'
+                    style:
+                      color: '#0D9488'
+                      icon: faKey
+                      label: CRY
                     modules: null
                   - id: null
                     name: Tesi
@@ -4019,8 +4105,10 @@ paths:
                     teacherName: null
                     previousEditions: []
                     isOverBooking: false
+                    category: I
                     enrollmentRole: student
                     year: '2025'
+                    style: null
                     modules: null
         '400':
           description: The server could not understand the request due to invalid syntax.
@@ -4941,6 +5029,7 @@ components:
             $ref: '#/components/schemas/CourseModuleEdition'
           example:
             - id: 244577
+              name: Fisica I
               year: '2021'
         vcOtherCourses:
           type: array
@@ -4950,16 +5039,16 @@ components:
               year:
                 type: string
                 example: '2021'
-              id:
-                type: integer
-                example: 244577
               name:
                 type: string
                 example: Fisica II
+              id:
+                type: integer
+                example: 244577
             required:
               - year
-              - id
               - name
+              - id
           description: Other editions/courses to be included in virtual classrooms
         notifications:
           type: object
@@ -5152,8 +5241,10 @@ components:
         - teacherId
         - teacherName
         - isOverBooking
+        - category
         - enrollmentRole
         - year
+        - style
       properties:
         id:
           type: integer
@@ -5183,6 +5274,12 @@ components:
         isOverBooking:
           type: boolean
           example: false
+        category:
+          type: string
+          description: |-
+            Defines the course type and whether the course page should be opened
+            when no instructor is assigned to the course.
+          example: I
         enrollmentRole:
           allOf:
             - $ref: '#/components/schemas/CourseEnrollmentRole'
@@ -5191,6 +5288,16 @@ components:
         year:
           type: string
           example: '2022'
+        style:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/Symbol'
+          nullable: true
+          description: Custom icon, color and label (acronym) chosen by the user for this course. `null` if never set
+          example:
+            color: '#2563EB'
+            icon: faCode
+            label: SDP
       example:
         id: 251008
         name: Programming Module A
@@ -5199,17 +5306,26 @@ components:
         teacherId: 3001
         teacherName: Mario Rossi
         isOverBooking: false
+        category: I
         enrollmentRole: student
         year: '2025'
+        style:
+          color: '#4F46E5'
+          icon: faCode
+          label: PMA
     CourseModuleEdition:
       type: object
       required:
         - year
+        - name
         - id
       properties:
         year:
           type: string
           example: '2021'
+        name:
+          type: string
+          example: Fisica II
         id:
           type: integer
           example: 244577
@@ -5225,6 +5341,7 @@ components:
           description: Previous editions of this course that were part of the student's PSP
           example:
             - id: 244577
+              name: Fisica I
               year: '2021'
       allOf:
         - $ref: '#/components/schemas/CourseModule'
@@ -5281,6 +5398,16 @@ components:
             lectures:
               type: boolean
               example: true
+        style:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/Symbol'
+          nullable: true
+          description: Custom icon, color and label (acronym) for the course, `null` to reset it
+          example:
+            color: '#2563EB'
+            icon: faCode
+            label: SDP
     CourseStatistics:
       type: object
       required:
@@ -6932,6 +7059,22 @@ components:
           type: integer
         failed:
           type: integer
+    ProvidedFeedback:
+      type: object
+      required:
+        - rating
+        - createdAt
+      properties:
+        rating:
+          type: number
+          example: 3
+        createdAt:
+          type: string
+          format: date-time
+          example: '2022-08-31T14:00:00Z'
+      example:
+        rating: 3
+        createdAt: '2022-08-31T14:00:00Z'
     ProvisionalGrade:
       type: object
       required:
@@ -7145,7 +7288,7 @@ components:
     StudentCareer:
       type: object
       required:
-        - status
+        - state
         - degreeId
         - degreeCode
         - degreeLevel
@@ -7167,15 +7310,15 @@ components:
         - enrollmentAttendedCredits
         - enrollmentAcquiredCredits
       properties:
-        status:
-          type: string
-          enum:
-            - active
-            - closed
-            - cancelled
-            - graduated
-            - career_closed
-          example: active
+        state:
+          allOf:
+            - $ref: '#/components/schemas/Symbol'
+          example:
+            label: Conclusa
+            color:
+              light: '#007595'
+              dark: '#53EAFD'
+            icon: fas/graduation-cap
         degreeId:
           type: string
           example: 81-6
@@ -7370,6 +7513,20 @@ components:
           $ref: '#/components/schemas/Device'
       example:
         username: s290683
+    Symbol:
+      type: object
+      properties:
+        label:
+          type: string
+        color:
+          anyOf:
+            - type: string
+            - $ref: '#/components/schemas/ThemeColors'
+        icon:
+          type: string
+      example:
+        color: '#000095'
+        icon: graduation-cap
     Teacher:
       type: object
       required:
@@ -7383,6 +7540,18 @@ components:
           type: string
         lastName:
           type: string
+    ThemeColors:
+      type: object
+      required:
+        - light
+        - dark
+      properties:
+        light:
+          type: string
+          description: Color used in light mode.
+        dark:
+          type: string
+          description: Color used in dark mode.
     Ticket:
       type: object
       required:
@@ -7391,6 +7560,7 @@ components:
         - message
         - status
         - hasAttachments
+        - needsFeedback
         - isFromAgent
         - agentId
         - unreadCount
@@ -7398,6 +7568,7 @@ components:
         - updatedAt
         - replies
         - attachments
+        - duplicateId
       properties:
         id:
           type: number
@@ -7411,6 +7582,9 @@ components:
         status:
           $ref: '#/components/schemas/TicketStatus'
         hasAttachments:
+          type: boolean
+          example: true
+        needsFeedback:
           type: boolean
           example: true
         isFromAgent:
@@ -7439,6 +7613,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TicketAttachment'
+        providedFeedback:
+          $ref: '#/components/schemas/ProvidedFeedback'
+        duplicateId:
+          type: integer
+          nullable: true
     TicketAttachment:
       type: object
       required:
@@ -7484,6 +7663,17 @@ components:
         id: 3623
         question: Ho dimenticato il mio nome utente e/o la password e non riesco più ad accedere ad Apply@Polito. Come posso fare?
         answer: Clicca sul link &quot;<u>Codice e/o Password dimenticata</u>?&quot; presente sulla pagina di <a href="https://didattica.polito.it/pls/portal30/sviluppo.pkg_apply.login?p_lang=IT">Log-in</a>&nbsp;e segui le istruzioni.
+    TicketFeedbackRequest:
+      type: object
+      required:
+        - rating
+      properties:
+        rating:
+          type: integer
+          example: 4
+        comment:
+          type: string
+          example: La risposta è stata molto utile, grazie!
     TicketOverview:
       type: object
       required:
@@ -7492,6 +7682,7 @@ components:
         - message
         - status
         - hasAttachments
+        - needsFeedback
         - isFromAgent
         - agentId
         - unreadCount
@@ -7510,6 +7701,9 @@ components:
         status:
           $ref: '#/components/schemas/TicketStatus'
         hasAttachments:
+          type: boolean
+          example: true
+        needsFeedback:
           type: boolean
           example: true
         isFromAgent:
@@ -7534,7 +7728,8 @@ components:
         id: 1145890
         subject: Sostituzione esame in piano carriera
         message: Buongiorno, vi contatto per sostituire A con B
-        status: new
+        status: open
+        needsFeedback: false
         hasAttachments: true
         isFromAgent: false
         agentId: null
@@ -7572,6 +7767,7 @@ components:
           example: 351
         needsFeedback:
           type: boolean
+          description: Indicates whether the user should be prompted to provide feedback for the ticket
           example: false
         isRead:
           type: boolean
@@ -7599,9 +7795,13 @@ components:
     TicketStatus:
       type: string
       enum:
-        - new
+        - open
         - pending
-        - closed
+        - waiting_user
+        - incoming
+        - resolved
+        - autoresolved
+        - duplicate
     TicketSubtopic:
       type: object
       required:
@@ -7674,14 +7874,15 @@ components:
             group: Insegnamento a scelta 1
     UpdateAssignmentRequest:
       type: object
+      required:
+        - deletedAt
       properties:
-        delivery:
-          type: boolean
-        state:
+        deletedAt:
           type: string
-          enum:
-            - submitted
-            - uploaded
+          format: date-time
+          nullable: true
+          description: Set to a date to withdraw the assignment, `null` to restore it
+          example: '2022-09-03T10:00:00Z'
     UpdateBookingRequest:
       type: object
       required:

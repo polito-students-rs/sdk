@@ -23,6 +23,8 @@ pub struct Ticket {
     pub status: models::TicketStatus,
     #[serde(rename = "hasAttachments")]
     pub has_attachments: bool,
+    #[serde(rename = "needsFeedback")]
+    pub needs_feedback: bool,
     /// If true, this ticket was opened by an agent (not by the student)
     #[serde(rename = "isFromAgent")]
     pub is_from_agent: bool,
@@ -38,16 +40,21 @@ pub struct Ticket {
     pub replies: Vec<models::TicketReply>,
     #[serde(rename = "attachments")]
     pub attachments: Vec<models::TicketAttachment>,
+    #[serde(rename = "providedFeedback", skip_serializing_if = "Option::is_none")]
+    pub provided_feedback: Option<Box<models::ProvidedFeedback>>,
+    #[serde(rename = "duplicateId", deserialize_with = "Option::deserialize")]
+    pub duplicate_id: Option<i32>,
 }
 
 impl Ticket {
-    pub fn new(id: f64, subject: String, message: String, status: models::TicketStatus, has_attachments: bool, is_from_agent: bool, agent_id: Option<f64>, unread_count: f64, created_at: chrono::DateTime<chrono::FixedOffset>, updated_at: chrono::DateTime<chrono::FixedOffset>, replies: Vec<models::TicketReply>, attachments: Vec<models::TicketAttachment>) -> Ticket {
+    pub fn new(id: f64, subject: String, message: String, status: models::TicketStatus, has_attachments: bool, needs_feedback: bool, is_from_agent: bool, agent_id: Option<f64>, unread_count: f64, created_at: chrono::DateTime<chrono::FixedOffset>, updated_at: chrono::DateTime<chrono::FixedOffset>, replies: Vec<models::TicketReply>, attachments: Vec<models::TicketAttachment>, duplicate_id: Option<i32>) -> Ticket {
         Ticket {
             id,
             subject,
             message,
             status,
             has_attachments,
+            needs_feedback,
             is_from_agent,
             agent_id,
             unread_count,
@@ -55,6 +62,8 @@ impl Ticket {
             updated_at,
             replies,
             attachments,
+            provided_feedback: None,
+            duplicate_id,
         }
     }
 }

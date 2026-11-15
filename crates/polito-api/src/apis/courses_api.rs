@@ -70,7 +70,7 @@ pub trait CoursesApi: Send + Sync {
 
     /// PATCH /courses/{courseId}/assignments/{assignmentId}
     ///
-    /// 
+    /// Withdraws the assignment if `deletedAt` is set to a date, restores it if `deletedAt` is `null`.
     async fn courses_update_assignment<'course_id, 'assignment_id, 'update_assignment_request>(&self, course_id: i32, assignment_id: i32, update_assignment_request: models::UpdateAssignmentRequest) -> Result<(), Error<CoursesUpdateAssignmentError>>;
 
     /// PATCH /courses/{courseId}/preferences
@@ -466,6 +466,7 @@ impl CoursesApi for CoursesApiClient {
         }
     }
 
+    /// Withdraws the assignment if `deletedAt` is set to a date, restores it if `deletedAt` is `null`.
     async fn courses_update_assignment<'course_id, 'assignment_id, 'update_assignment_request>(&self, course_id: i32, assignment_id: i32, update_assignment_request: models::UpdateAssignmentRequest) -> Result<(), Error<CoursesUpdateAssignmentError>> {
         let local_var_configuration = &self.configuration;
 

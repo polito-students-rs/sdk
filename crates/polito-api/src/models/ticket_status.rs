@@ -14,28 +14,40 @@ use serde::{Deserialize, Serialize};
 /// 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
 pub enum TicketStatus {
-    #[serde(rename = "new")]
-    New,
+    #[serde(rename = "open")]
+    Open,
     #[serde(rename = "pending")]
     Pending,
-    #[serde(rename = "closed")]
-    Closed,
+    #[serde(rename = "waiting_user")]
+    WaitingUser,
+    #[serde(rename = "incoming")]
+    Incoming,
+    #[serde(rename = "resolved")]
+    Resolved,
+    #[serde(rename = "autoresolved")]
+    Autoresolved,
+    #[serde(rename = "duplicate")]
+    Duplicate,
 
 }
 
 impl std::fmt::Display for TicketStatus {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
-            Self::New => write!(f, "new"),
+            Self::Open => write!(f, "open"),
             Self::Pending => write!(f, "pending"),
-            Self::Closed => write!(f, "closed"),
+            Self::WaitingUser => write!(f, "waiting_user"),
+            Self::Incoming => write!(f, "incoming"),
+            Self::Resolved => write!(f, "resolved"),
+            Self::Autoresolved => write!(f, "autoresolved"),
+            Self::Duplicate => write!(f, "duplicate"),
         }
     }
 }
 
 impl Default for TicketStatus {
     fn default() -> TicketStatus {
-        Self::New
+        Self::Open
     }
 }
 

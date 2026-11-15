@@ -15,18 +15,18 @@ use serde::{Deserialize, Serialize};
 pub struct CourseAllOfVcOtherCourses {
     #[serde(rename = "year")]
     pub year: String,
-    #[serde(rename = "id")]
-    pub id: i32,
     #[serde(rename = "name")]
     pub name: String,
+    #[serde(rename = "id")]
+    pub id: i32,
 }
 
 impl CourseAllOfVcOtherCourses {
-    pub fn new(year: String, id: i32, name: String) -> CourseAllOfVcOtherCourses {
+    pub fn new(year: String, name: String, id: i32) -> CourseAllOfVcOtherCourses {
         CourseAllOfVcOtherCourses {
             year,
-            id,
             name,
+            id,
         }
     }
 }

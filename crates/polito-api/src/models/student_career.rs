@@ -13,8 +13,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct StudentCareer {
-    #[serde(rename = "status")]
-    pub status: Status,
+    #[serde(rename = "state")]
+    pub state: Box<models::Symbol>,
     #[serde(rename = "degreeId")]
     pub degree_id: String,
     #[serde(rename = "degreeCode")]
@@ -63,9 +63,9 @@ pub struct StudentCareer {
 }
 
 impl StudentCareer {
-    pub fn new(status: Status, degree_id: String, degree_code: String, degree_level: String, degree_name: String, first_enrollment_year: i32, last_enrollment_year: i32, is_currently_enrolled: bool, average_grade: Option<f64>, estimated_final_grade: Option<f64>, is_final_grade_purged: bool, masters_admission_average_grade: Option<f64>, total_on_time_exam_points: Option<f64>, max_on_time_exam_points: f64, excluded_credits_number: Option<f64>, total_credits: i32, total_attended_credits: i32, total_acquired_credits: i32, enrollment_credits: i32, enrollment_attended_credits: i32, enrollment_acquired_credits: i32) -> StudentCareer {
+    pub fn new(state: models::Symbol, degree_id: String, degree_code: String, degree_level: String, degree_name: String, first_enrollment_year: i32, last_enrollment_year: i32, is_currently_enrolled: bool, average_grade: Option<f64>, estimated_final_grade: Option<f64>, is_final_grade_purged: bool, masters_admission_average_grade: Option<f64>, total_on_time_exam_points: Option<f64>, max_on_time_exam_points: f64, excluded_credits_number: Option<f64>, total_credits: i32, total_attended_credits: i32, total_acquired_credits: i32, enrollment_credits: i32, enrollment_attended_credits: i32, enrollment_acquired_credits: i32) -> StudentCareer {
         StudentCareer {
-            status,
+            state: Box::new(state),
             degree_id,
             degree_code,
             degree_level,
@@ -87,26 +87,6 @@ impl StudentCareer {
             enrollment_attended_credits,
             enrollment_acquired_credits,
         }
-    }
-}
-/// 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum Status {
-    #[serde(rename = "active")]
-    Active,
-    #[serde(rename = "closed")]
-    Closed,
-    #[serde(rename = "cancelled")]
-    Cancelled,
-    #[serde(rename = "graduated")]
-    Graduated,
-    #[serde(rename = "career_closed")]
-    CareerClosed,
-}
-
-impl Default for Status {
-    fn default() -> Status {
-        Self::Active
     }
 }
 

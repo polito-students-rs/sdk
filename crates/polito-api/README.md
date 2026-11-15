@@ -107,17 +107,18 @@ Class | Method | HTTP request | Description
 *StudentApi* | [**student_ns_get_unread_emails_number**](docs/StudentApi.md#student_ns_get_unread_emails_number) | **GET** /unreadEmails | Retrieve student's unread emails number | Recupera il numero di email non lette dello studente
 *StudentApi* | [**student_ns_update_device_preferences**](docs/StudentApi.md#student_ns_update_device_preferences) | **PATCH** /preferences | Update device preferences | Aggiorna preferenze del dispositivo
 *SurveysApi* | [**surveys_get_surveys**](docs/SurveysApi.md#surveys_get_surveys) | **GET** /surveys | Get surveys | Mostra survey
-*TicketsApi* | [**ticket_faqs_search_ticket_faqs**](docs/TicketsApi.md#ticket_faqs_search_ticket_faqs) | **GET** /ticket-faqs | Search ticket FAQs | Ricerca FAQ ticket
-*TicketsApi* | [**ticket_topics_get_ticket_topics**](docs/TicketsApi.md#ticket_topics_get_ticket_topics) | **GET** /ticket-topics | List ticket topics | Elenca ambiti ticket
-*TicketsApi* | [**tickets_create_ticket**](docs/TicketsApi.md#tickets_create_ticket) | **POST** /tickets | Create ticket | Crea ticket
-*TicketsApi* | [**tickets_get_ticket**](docs/TicketsApi.md#tickets_get_ticket) | **GET** /tickets/{ticketId} | Show a ticket | Mostra un ticket
-*TicketsApi* | [**tickets_get_ticket_attachment**](docs/TicketsApi.md#tickets_get_ticket_attachment) | **GET** /tickets/{ticketId}/attachments/{attachmentId} | Download ticket attachment | Scarica allegato del ticket
-*TicketsApi* | [**tickets_get_ticket_reply_attachment**](docs/TicketsApi.md#tickets_get_ticket_reply_attachment) | **GET** /tickets/{ticketId}/replies/{replyId}/attachments/{attachmentId} | Download ticket reply attachment | Scarica allegato di una risposta al ticket
-*TicketsApi* | [**tickets_get_tickets**](docs/TicketsApi.md#tickets_get_tickets) | **GET** /tickets | List tickets | Elenca ticket
-*TicketsApi* | [**tickets_mark_ticket_as_closed**](docs/TicketsApi.md#tickets_mark_ticket_as_closed) | **PUT** /tickets/{ticketId}/close | Mark a ticket as closed | Segna un ticket come chiuso
-*TicketsApi* | [**tickets_mark_ticket_as_read**](docs/TicketsApi.md#tickets_mark_ticket_as_read) | **PUT** /tickets/{ticketId}/read | Mark a ticket as read | Segna un ticket come letto
-*TicketsApi* | [**tickets_reply_to_ticket**](docs/TicketsApi.md#tickets_reply_to_ticket) | **POST** /tickets/{ticketId}/replies | Reply to a ticket | Rispondi ad un ticket
-*TicketsApi* | [**tickets_set_ticket_reply_feedback**](docs/TicketsApi.md#tickets_set_ticket_reply_feedback) | **PUT** /tickets/{ticketId}/replies/{replyId}/feedback | Give feedback on a ticket reply | Fornisci feedback su una risposta al ticket
+*TicketsApi* | [**ticket_faqs_search_ticket_faqs**](docs/TicketsApi.md#ticket_faqs_search_ticket_faqs) | **GET** /student/ticket-faqs | Search ticket FAQs | Ricerca FAQ ticket
+*TicketsApi* | [**ticket_topics_get_ticket_topics**](docs/TicketsApi.md#ticket_topics_get_ticket_topics) | **GET** /student/ticket-topics | List ticket topics | Elenca ambiti ticket
+*TicketsApi* | [**tickets_create_ticket**](docs/TicketsApi.md#tickets_create_ticket) | **POST** /student/tickets | Create ticket | Crea ticket
+*TicketsApi* | [**tickets_get_ticket**](docs/TicketsApi.md#tickets_get_ticket) | **GET** /student/tickets/{ticketId} | Show a ticket | Mostra un ticket
+*TicketsApi* | [**tickets_get_ticket_attachment**](docs/TicketsApi.md#tickets_get_ticket_attachment) | **GET** /student/tickets/{ticketId}/attachments/{attachmentId} | Download ticket attachment | Scarica allegato del ticket
+*TicketsApi* | [**tickets_get_ticket_reply_attachment**](docs/TicketsApi.md#tickets_get_ticket_reply_attachment) | **GET** /student/tickets/{ticketId}/replies/{replyId}/attachments/{attachmentId} | Download ticket reply attachment | Scarica allegato di una risposta al ticket
+*TicketsApi* | [**tickets_get_tickets**](docs/TicketsApi.md#tickets_get_tickets) | **GET** /student/tickets | List tickets | Elenca ticket
+*TicketsApi* | [**tickets_mark_ticket_as_closed**](docs/TicketsApi.md#tickets_mark_ticket_as_closed) | **PUT** /student/tickets/{ticketId}/resolve | Mark a ticket as resolved | Segna un ticket come risolto
+*TicketsApi* | [**tickets_mark_ticket_as_read**](docs/TicketsApi.md#tickets_mark_ticket_as_read) | **PUT** /student/tickets/{ticketId}/read | Mark a ticket as read | Segna un ticket come letto
+*TicketsApi* | [**tickets_provide_ticket_feedback**](docs/TicketsApi.md#tickets_provide_ticket_feedback) | **POST** /student/tickets/{ticketId}/feedback | Provide feedback about a ticket | Fornisci feedback su un ticket
+*TicketsApi* | [**tickets_reply_to_ticket**](docs/TicketsApi.md#tickets_reply_to_ticket) | **POST** /student/tickets/{ticketId}/replies | Reply to a ticket | Rispondi ad un ticket
+*TicketsApi* | [**tickets_set_ticket_reply_feedback**](docs/TicketsApi.md#tickets_set_ticket_reply_feedback) | **PUT** /student/tickets/{ticketId}/replies/{replyId}/feedback | Give feedback on the bot reply | Fornisci feedback sulla risposta del bot
 
 
 ## Documentation For Models
@@ -280,6 +281,7 @@ Class | Method | HTTP request | Description
  - [PlacesGetPlaces200Response](docs/PlacesGetPlaces200Response.md)
  - [PreviousYearsToCompare](docs/PreviousYearsToCompare.md)
  - [ProfileGetProfile200Response](docs/ProfileGetProfile200Response.md)
+ - [ProvidedFeedback](docs/ProvidedFeedback.md)
  - [ProvisionalGrade](docs/ProvisionalGrade.md)
  - [ProvisionalGradeState](docs/ProvisionalGradeState.md)
  - [ProvisionalGradesGetStudentProvisionalGrades200Response](docs/ProvisionalGradesGetStudentProvisionalGrades200Response.md)
@@ -302,11 +304,15 @@ Class | Method | HTTP request | Description
  - [SurveyTaxonomy](docs/SurveyTaxonomy.md)
  - [SurveysGetSurveys200Response](docs/SurveysGetSurveys200Response.md)
  - [SwitchCareerRequest](docs/SwitchCareerRequest.md)
+ - [Symbol](docs/Symbol.md)
+ - [SymbolColor](docs/SymbolColor.md)
  - [Teacher](docs/Teacher.md)
+ - [ThemeColors](docs/ThemeColors.md)
  - [Ticket](docs/Ticket.md)
  - [TicketAttachment](docs/TicketAttachment.md)
  - [TicketFaq](docs/TicketFaq.md)
  - [TicketFaqsSearchTicketFaqs200Response](docs/TicketFaqsSearchTicketFaqs200Response.md)
+ - [TicketFeedbackRequest](docs/TicketFeedbackRequest.md)
  - [TicketOverview](docs/TicketOverview.md)
  - [TicketReply](docs/TicketReply.md)
  - [TicketReplyAgentId](docs/TicketReplyAgentId.md)

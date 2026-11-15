@@ -22,6 +22,7 @@ pub struct TicketReply {
     pub is_from_agent: bool,
     #[serde(rename = "agentId")]
     pub agent_id: Box<models::TicketReplyAgentId>,
+    /// Indicates whether the user should be prompted to provide feedback for the ticket
     #[serde(rename = "needsFeedback", skip_serializing_if = "Option::is_none")]
     pub needs_feedback: Option<bool>,
     #[serde(rename = "isRead")]
