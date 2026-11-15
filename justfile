@@ -5,6 +5,7 @@ import 'dev/windows/windows.just'
 [group("gen")]
 codegen:
     cargo xtask sync-version
+    npm install
     npm exec --no -- openapi-generator-cli batch --fail-fast "target/codegen/*.yml"
 
 check:

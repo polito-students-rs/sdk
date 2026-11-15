@@ -9,9 +9,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@openapitools/openapi-generator-cli": "^2.42.1"
+    "@openapitools/openapi-generator-cli": "2.42.1"
   },
   "allowScripts": {
-    "@openapitools/openapi-generator-cli@2.42.0": true
+    "@openapitools/openapi-generator-cli@2.42.1": true
   }
 }

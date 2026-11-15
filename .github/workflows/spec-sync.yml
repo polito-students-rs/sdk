@@ -31,6 +31,13 @@ jobs:
         if: steps.diff.outputs.changed == 'true'
       - uses: actions/setup-node@v4
         if: steps.diff.outputs.changed == 'true'
+        with:
+          node-version: lts/*
+      - uses: actions/setup-java@v5
+        if: steps.diff.outputs.changed == 'true'
+        with:
+          distribution: temurin
+          java-version: '21'
       - uses: extractions/setup-just@v4
         if: steps.diff.outputs.changed == 'true'
 
@@ -44,11 +51,18 @@ jobs:
         run: cargo build -p polito-client
         continue-on-error: true
 
+      - name: Preview PR (local act run)
+        if: steps.diff.outputs.changed == 'true' && env.ACT
+        run: |
+          echo "build outcome: ${{ steps.build.outcome }}"
+          git status --short -- spec/openapi.yaml crates/polito-api
+          git diff --stat -- spec/openapi.yaml crates/polito-api
+
       - name: Open PR
-        if: steps.diff.outputs.changed == 'true'
+        if: steps.diff.outputs.changed == 'true' && !env.ACT
         uses: peter-evans/create-pull-request@v6
         with:
-          token: ${{ secrets.SYNC_PAT }}   # PAT, così scatta la CI sul PR
+          token: ${{ secrets.SYNC_PAT }}
           commit-message: "chore: sync upstream openapi spec"
           title: "Upstream OpenAPI spec changed"
           body: |
@@ -58,5 +72,5 @@ jobs:
           branch: spec-update
           add-paths: |
             spec/openapi.yaml
-            crates/polito-openapi/**
+            crates/polito-api/**
           labels: ${{ steps.build.outcome == 'failure' && 'breaking' || 'automated' }}
