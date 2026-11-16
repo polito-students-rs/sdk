@@ -13,32 +13,16 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Default, Debug, PartialEq, Serialize, Deserialize)]
 pub struct UpdateAssignmentRequest {
-    #[serde(rename = "delivery", skip_serializing_if = "Option::is_none")]
-    pub delivery: Option<bool>,
-    #[serde(rename = "state", skip_serializing_if = "Option::is_none")]
-    pub state: Option<State>,
+    /// Set to a date to withdraw the assignment, `null` to restore it
+    #[serde(rename = "deletedAt", deserialize_with = "Option::deserialize")]
+    pub deleted_at: Option<chrono::DateTime<chrono::FixedOffset>>,
 }
 
 impl UpdateAssignmentRequest {
-    pub fn new() -> UpdateAssignmentRequest {
+    pub fn new(deleted_at: Option<chrono::DateTime<chrono::FixedOffset>>) -> UpdateAssignmentRequest {
         UpdateAssignmentRequest {
-            delivery: None,
-            state: None,
+            deleted_at,
         }
-    }
-}
-/// 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Ord, PartialOrd, Hash, Serialize, Deserialize)]
-pub enum State {
-    #[serde(rename = "submitted")]
-    Submitted,
-    #[serde(rename = "uploaded")]
-    Uploaded,
-}
-
-impl Default for State {
-    fn default() -> State {
-        Self::Submitted
     }
 }
 

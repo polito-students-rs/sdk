@@ -23,57 +23,62 @@ use crate::apis::ContentType;
 #[async_trait]
 pub trait TicketsApi: Send + Sync {
 
-    /// GET /ticket-faqs
+    /// GET /student/ticket-faqs
     ///
     /// 
     async fn ticket_faqs_search_ticket_faqs<'search, 'accept_language>(&self, search: &'search str, accept_language: Option<&'accept_language str>) -> Result<models::TicketFaqsSearchTicketFaqs200Response, Error<TicketFaqsSearchTicketFaqsError>>;
 
-    /// GET /ticket-topics
+    /// GET /student/ticket-topics
     ///
     /// 
     async fn ticket_topics_get_ticket_topics<>(&self, ) -> Result<models::TicketTopicsGetTicketTopics200Response, Error<TicketTopicsGetTicketTopicsError>>;
 
-    /// POST /tickets
+    /// POST /student/tickets
     ///
     /// 
     async fn tickets_create_ticket<'subject, 'message, 'subtopic_id, 'attachment>(&self, subject: &'subject str, message: &'message str, subtopic_id: f64, attachment: Option<std::path::PathBuf>) -> Result<models::TicketsCreateTicket200Response, Error<TicketsCreateTicketError>>;
 
-    /// GET /tickets/{ticketId}
+    /// GET /student/tickets/{ticketId}
     ///
     /// 
     async fn tickets_get_ticket<'ticket_id>(&self, ticket_id: i32) -> Result<models::TicketsGetTicket200Response, Error<TicketsGetTicketError>>;
 
-    /// GET /tickets/{ticketId}/attachments/{attachmentId}
+    /// GET /student/tickets/{ticketId}/attachments/{attachmentId}
     ///
     /// 
     async fn tickets_get_ticket_attachment<'ticket_id, 'attachment_id>(&self, ticket_id: i32, attachment_id: i32) -> Result<std::path::PathBuf, Error<TicketsGetTicketAttachmentError>>;
 
-    /// GET /tickets/{ticketId}/replies/{replyId}/attachments/{attachmentId}
+    /// GET /student/tickets/{ticketId}/replies/{replyId}/attachments/{attachmentId}
     ///
     /// 
     async fn tickets_get_ticket_reply_attachment<'ticket_id, 'reply_id, 'attachment_id>(&self, ticket_id: i32, reply_id: i32, attachment_id: i32) -> Result<std::path::PathBuf, Error<TicketsGetTicketReplyAttachmentError>>;
 
-    /// GET /tickets
+    /// GET /student/tickets
     ///
     /// 
     async fn tickets_get_tickets<>(&self, ) -> Result<models::TicketsGetTickets200Response, Error<TicketsGetTicketsError>>;
 
-    /// PUT /tickets/{ticketId}/close
+    /// PUT /student/tickets/{ticketId}/resolve
     ///
     /// 
     async fn tickets_mark_ticket_as_closed<'ticket_id>(&self, ticket_id: i32) -> Result<(), Error<TicketsMarkTicketAsClosedError>>;
 
-    /// PUT /tickets/{ticketId}/read
+    /// PUT /student/tickets/{ticketId}/read
     ///
     /// 
     async fn tickets_mark_ticket_as_read<'ticket_id>(&self, ticket_id: i32) -> Result<(), Error<TicketsMarkTicketAsReadError>>;
 
-    /// POST /tickets/{ticketId}/replies
+    /// POST /student/tickets/{ticketId}/feedback
+    ///
+    /// 
+    async fn tickets_provide_ticket_feedback<'ticket_id, 'ticket_feedback_request>(&self, ticket_id: i32, ticket_feedback_request: models::TicketFeedbackRequest) -> Result<(), Error<TicketsProvideTicketFeedbackError>>;
+
+    /// POST /student/tickets/{ticketId}/replies
     ///
     /// 
     async fn tickets_reply_to_ticket<'ticket_id, 'message, 'attachment>(&self, ticket_id: i32, message: &'message str, attachment: Option<std::path::PathBuf>) -> Result<(), Error<TicketsReplyToTicketError>>;
 
-    /// PUT /tickets/{ticketId}/replies/{replyId}/feedback
+    /// PUT /student/tickets/{ticketId}/replies/{replyId}/feedback
     ///
     /// 
     async fn tickets_set_ticket_reply_feedback<'ticket_id, 'reply_id, 'positive>(&self, ticket_id: i32, reply_id: i32, positive: bool) -> Result<(), Error<TicketsSetTicketReplyFeedbackError>>;
@@ -98,7 +103,7 @@ impl TicketsApi for TicketsApiClient {
 
         let local_var_client = &local_var_configuration.client;
 
-        let local_var_uri_str = format!("{}/ticket-faqs", local_var_configuration.base_path);
+        let local_var_uri_str = format!("{}/student/ticket-faqs", local_var_configuration.base_path);
         let mut local_var_req_builder = local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
 
         local_var_req_builder = local_var_req_builder.query(&[("search", &search.to_string())]);
@@ -142,7 +147,7 @@ impl TicketsApi for TicketsApiClient {
 
         let local_var_client = &local_var_configuration.client;
 
-        let local_var_uri_str = format!("{}/ticket-topics", local_var_configuration.base_path);
+        let local_var_uri_str = format!("{}/student/ticket-topics", local_var_configuration.base_path);
         let mut local_var_req_builder = local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
 
         if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
@@ -182,7 +187,7 @@ impl TicketsApi for TicketsApiClient {
 
         let local_var_client = &local_var_configuration.client;
 
-        let local_var_uri_str = format!("{}/tickets", local_var_configuration.base_path);
+        let local_var_uri_str = format!("{}/student/tickets", local_var_configuration.base_path);
         let mut local_var_req_builder = local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
 
         if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
@@ -236,7 +241,7 @@ impl TicketsApi for TicketsApiClient {
 
         let local_var_client = &local_var_configuration.client;
 
-        let local_var_uri_str = format!("{}/tickets/{ticketId}", local_var_configuration.base_path, ticketId=ticket_id);
+        let local_var_uri_str = format!("{}/student/tickets/{ticketId}", local_var_configuration.base_path, ticketId=ticket_id);
         let mut local_var_req_builder = local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
 
         if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
@@ -276,7 +281,7 @@ impl TicketsApi for TicketsApiClient {
 
         let local_var_client = &local_var_configuration.client;
 
-        let local_var_uri_str = format!("{}/tickets/{ticketId}/attachments/{attachmentId}", local_var_configuration.base_path, ticketId=ticket_id, attachmentId=attachment_id);
+        let local_var_uri_str = format!("{}/student/tickets/{ticketId}/attachments/{attachmentId}", local_var_configuration.base_path, ticketId=ticket_id, attachmentId=attachment_id);
         let mut local_var_req_builder = local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
 
         if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
@@ -316,7 +321,7 @@ impl TicketsApi for TicketsApiClient {
 
         let local_var_client = &local_var_configuration.client;
 
-        let local_var_uri_str = format!("{}/tickets/{ticketId}/replies/{replyId}/attachments/{attachmentId}", local_var_configuration.base_path, ticketId=ticket_id, replyId=reply_id, attachmentId=attachment_id);
+        let local_var_uri_str = format!("{}/student/tickets/{ticketId}/replies/{replyId}/attachments/{attachmentId}", local_var_configuration.base_path, ticketId=ticket_id, replyId=reply_id, attachmentId=attachment_id);
         let mut local_var_req_builder = local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
 
         if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
@@ -356,7 +361,7 @@ impl TicketsApi for TicketsApiClient {
 
         let local_var_client = &local_var_configuration.client;
 
-        let local_var_uri_str = format!("{}/tickets", local_var_configuration.base_path);
+        let local_var_uri_str = format!("{}/student/tickets", local_var_configuration.base_path);
         let mut local_var_req_builder = local_var_client.request(reqwest::Method::GET, local_var_uri_str.as_str());
 
         if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
@@ -396,7 +401,7 @@ impl TicketsApi for TicketsApiClient {
 
         let local_var_client = &local_var_configuration.client;
 
-        let local_var_uri_str = format!("{}/tickets/{ticketId}/close", local_var_configuration.base_path, ticketId=ticket_id);
+        let local_var_uri_str = format!("{}/student/tickets/{ticketId}/resolve", local_var_configuration.base_path, ticketId=ticket_id);
         let mut local_var_req_builder = local_var_client.request(reqwest::Method::PUT, local_var_uri_str.as_str());
 
         if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
@@ -426,7 +431,7 @@ impl TicketsApi for TicketsApiClient {
 
         let local_var_client = &local_var_configuration.client;
 
-        let local_var_uri_str = format!("{}/tickets/{ticketId}/read", local_var_configuration.base_path, ticketId=ticket_id);
+        let local_var_uri_str = format!("{}/student/tickets/{ticketId}/read", local_var_configuration.base_path, ticketId=ticket_id);
         let mut local_var_req_builder = local_var_client.request(reqwest::Method::PUT, local_var_uri_str.as_str());
 
         if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
@@ -451,12 +456,43 @@ impl TicketsApi for TicketsApiClient {
         }
     }
 
+    async fn tickets_provide_ticket_feedback<'ticket_id, 'ticket_feedback_request>(&self, ticket_id: i32, ticket_feedback_request: models::TicketFeedbackRequest) -> Result<(), Error<TicketsProvideTicketFeedbackError>> {
+        let local_var_configuration = &self.configuration;
+
+        let local_var_client = &local_var_configuration.client;
+
+        let local_var_uri_str = format!("{}/student/tickets/{ticketId}/feedback", local_var_configuration.base_path, ticketId=ticket_id);
+        let mut local_var_req_builder = local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
+
+        if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
+            local_var_req_builder = local_var_req_builder.header(reqwest::header::USER_AGENT, local_var_user_agent.clone());
+        }
+        if let Some(ref local_var_token) = local_var_configuration.bearer_access_token {
+            local_var_req_builder = local_var_req_builder.bearer_auth(local_var_token.to_owned());
+        };
+        local_var_req_builder = local_var_req_builder.json(&ticket_feedback_request);
+
+        let local_var_req = local_var_req_builder.build()?;
+        let local_var_resp = local_var_client.execute(local_var_req).await?;
+
+        let local_var_status = local_var_resp.status();
+        let local_var_content = local_var_resp.text().await?;
+
+        if !local_var_status.is_client_error() && !local_var_status.is_server_error() {
+            Ok(())
+        } else {
+            let local_var_entity: Option<TicketsProvideTicketFeedbackError> = serde_json::from_str(&local_var_content).ok();
+            let local_var_error = ResponseContent { status: local_var_status, content: local_var_content, entity: local_var_entity };
+            Err(Error::ResponseError(local_var_error))
+        }
+    }
+
     async fn tickets_reply_to_ticket<'ticket_id, 'message, 'attachment>(&self, ticket_id: i32, message: &'message str, attachment: Option<std::path::PathBuf>) -> Result<(), Error<TicketsReplyToTicketError>> {
         let local_var_configuration = &self.configuration;
 
         let local_var_client = &local_var_configuration.client;
 
-        let local_var_uri_str = format!("{}/tickets/{ticketId}/replies", local_var_configuration.base_path, ticketId=ticket_id);
+        let local_var_uri_str = format!("{}/student/tickets/{ticketId}/replies", local_var_configuration.base_path, ticketId=ticket_id);
         let mut local_var_req_builder = local_var_client.request(reqwest::Method::POST, local_var_uri_str.as_str());
 
         if let Some(ref local_var_user_agent) = local_var_configuration.user_agent {
@@ -498,7 +534,7 @@ impl TicketsApi for TicketsApiClient {
 
         let local_var_client = &local_var_configuration.client;
 
-        let local_var_uri_str = format!("{}/tickets/{ticketId}/replies/{replyId}/feedback", local_var_configuration.base_path, ticketId=ticket_id, replyId=reply_id);
+        let local_var_uri_str = format!("{}/student/tickets/{ticketId}/replies/{replyId}/feedback", local_var_configuration.base_path, ticketId=ticket_id, replyId=reply_id);
         let mut local_var_req_builder = local_var_client.request(reqwest::Method::PUT, local_var_uri_str.as_str());
 
         local_var_req_builder = local_var_req_builder.query(&[("positive", &positive.to_string())]);
@@ -604,6 +640,15 @@ pub enum TicketsMarkTicketAsClosedError {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum TicketsMarkTicketAsReadError {
+    Status400(models::ErrorResponse),
+    Status500(models::ErrorResponse),
+    UnknownValue(serde_json::Value),
+}
+
+/// struct for typed errors of method [`TicketsApi::tickets_provide_ticket_feedback`]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum TicketsProvideTicketFeedbackError {
     Status400(models::ErrorResponse),
     Status500(models::ErrorResponse),
     UnknownValue(serde_json::Value),

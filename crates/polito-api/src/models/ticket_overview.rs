@@ -23,6 +23,8 @@ pub struct TicketOverview {
     pub status: models::TicketStatus,
     #[serde(rename = "hasAttachments")]
     pub has_attachments: bool,
+    #[serde(rename = "needsFeedback")]
+    pub needs_feedback: bool,
     /// If true, this ticket was opened by an agent (not by the student)
     #[serde(rename = "isFromAgent")]
     pub is_from_agent: bool,
@@ -37,13 +39,14 @@ pub struct TicketOverview {
 }
 
 impl TicketOverview {
-    pub fn new(id: f64, subject: String, message: String, status: models::TicketStatus, has_attachments: bool, is_from_agent: bool, agent_id: Option<f64>, unread_count: f64, created_at: chrono::DateTime<chrono::FixedOffset>, updated_at: chrono::DateTime<chrono::FixedOffset>) -> TicketOverview {
+    pub fn new(id: f64, subject: String, message: String, status: models::TicketStatus, has_attachments: bool, needs_feedback: bool, is_from_agent: bool, agent_id: Option<f64>, unread_count: f64, created_at: chrono::DateTime<chrono::FixedOffset>, updated_at: chrono::DateTime<chrono::FixedOffset>) -> TicketOverview {
         TicketOverview {
             id,
             subject,
             message,
             status,
             has_attachments,
+            needs_feedback,
             is_from_agent,
             agent_id,
             unread_count,

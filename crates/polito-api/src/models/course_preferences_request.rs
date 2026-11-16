@@ -15,12 +15,16 @@ use serde::{Deserialize, Serialize};
 pub struct CoursePreferencesRequest {
     #[serde(rename = "notifications", skip_serializing_if = "Option::is_none")]
     pub notifications: Option<Box<models::CoursePreferencesRequestNotifications>>,
+    /// Custom icon, color and label (acronym) for the course, `null` to reset it
+    #[serde(rename = "style", default, with = "::serde_with::rust::double_option", skip_serializing_if = "Option::is_none")]
+    pub style: Option<Option<Box<models::Symbol>>>,
 }
 
 impl CoursePreferencesRequest {
     pub fn new() -> CoursePreferencesRequest {
         CoursePreferencesRequest {
             notifications: None,
+            style: None,
         }
     }
 }

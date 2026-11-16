@@ -29,11 +29,17 @@ pub struct CourseOverview {
     pub teacher_name: Option<String>,
     #[serde(rename = "isOverBooking")]
     pub is_over_booking: bool,
+    /// Defines the course type and whether the course page should be opened when no instructor is assigned to the course.
+    #[serde(rename = "category")]
+    pub category: String,
     /// Type of enrollment of the user for this course
     #[serde(rename = "enrollmentRole")]
     pub enrollment_role: models::CourseEnrollmentRole,
     #[serde(rename = "year")]
     pub year: String,
+    /// Custom icon, color and label (acronym) chosen by the user for this course. `null` if never set
+    #[serde(rename = "style", deserialize_with = "Option::deserialize")]
+    pub style: Option<Box<models::Symbol>>,
     /// Previous editions of this course that were part of the student's PSP
     #[serde(rename = "previousEditions")]
     pub previous_editions: Vec<models::CourseModuleEdition>,
@@ -44,7 +50,7 @@ pub struct CourseOverview {
 }
 
 impl CourseOverview {
-    pub fn new(id: Option<i32>, shortcode: String, name: String, teaching_period: String, teacher_id: Option<i32>, teacher_name: Option<String>, is_over_booking: bool, enrollment_role: models::CourseEnrollmentRole, year: String, previous_editions: Vec<models::CourseModuleEdition>, cfu: i32, modules: Option<Vec<models::CourseModuleOverview>>) -> CourseOverview {
+    pub fn new(id: Option<i32>, shortcode: String, name: String, teaching_period: String, teacher_id: Option<i32>, teacher_name: Option<String>, is_over_booking: bool, category: String, enrollment_role: models::CourseEnrollmentRole, year: String, style: Option<models::Symbol>, previous_editions: Vec<models::CourseModuleEdition>, cfu: i32, modules: Option<Vec<models::CourseModuleOverview>>) -> CourseOverview {
         CourseOverview {
             id,
             shortcode,
@@ -53,8 +59,10 @@ impl CourseOverview {
             teacher_id,
             teacher_name,
             is_over_booking,
+            category,
             enrollment_role,
             year,
+            style: if let Some(x) = style {Some(Box::new(x))} else {None},
             previous_editions,
             cfu,
             modules,

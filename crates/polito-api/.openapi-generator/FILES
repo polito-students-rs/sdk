@@ -178,6 +178,7 @@ src/models/places_get_place_200_response.rs
 src/models/places_get_places_200_response.rs
 src/models/previous_years_to_compare.rs
 src/models/profile_get_profile_200_response.rs
+src/models/provided_feedback.rs
 src/models/provisional_grade.rs
 src/models/provisional_grade_state.rs
 src/models/provisional_grades_get_student_provisional_grades_200_response.rs
@@ -200,11 +201,15 @@ src/models/survey_course_ref.rs
 src/models/survey_taxonomy.rs
 src/models/surveys_get_surveys_200_response.rs
 src/models/switch_career_request.rs
+src/models/symbol.rs
+src/models/symbol_color.rs
 src/models/teacher.rs
+src/models/theme_colors.rs
 src/models/ticket.rs
 src/models/ticket_attachment.rs
 src/models/ticket_faq.rs
 src/models/ticket_faqs_search_ticket_faqs_200_response.rs
+src/models/ticket_feedback_request.rs
 src/models/ticket_overview.rs
 src/models/ticket_reply.rs
 src/models/ticket_reply_agent_id.rs
