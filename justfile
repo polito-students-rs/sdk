@@ -12,6 +12,11 @@ check:
     cargo clippy --all-targets -- -D warnings
     cargo test
 
+[group("mock")]
+[doc("run the mock integration tests (mock started, or reused if `just mock` runs); args: `--list` or submodule(s), e.g. `announcements`")]
+test-mock *submodules:
+    cargo test -p polito-client --test mock -- {{submodules}}
+
 publish-check:
     cargo package --list
     cargo publish --dry-run
