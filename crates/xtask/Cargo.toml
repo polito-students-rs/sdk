@@ -9,3 +9,7 @@ cargo_toml = "1.0.0"
 anyhow = "1.0.103"
 askama = "0.14.0"
 fs-utils = "1.1.4"
+serde_json_path = "0.7.2"
+serde_norway = "0.9.42"
+serde_json = { version = "1.0.154", features = ["preserve_order"] }
+serde = { version = "1.0.229", features = ["derive"] }

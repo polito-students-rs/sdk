@@ -1,7 +1,6 @@
 use askama::Template;
-use std::io::Write;
 use std::path::Path;
-use std::fs::{self, OpenOptions};
+use std::fs;
 use fs_utils::copy;
 use anyhow::{Result, anyhow};
 use cargo_toml::Manifest;
@@ -38,10 +37,6 @@ pub fn render_rust_gen_config() -> Result<()> {
     copy::copy_directory(shared_dir, &out_dir)?;
     let polito_client_version = retrieve_polito_client_version()?;
     let content = RustGeneratorTemplate { package_version: polito_client_version.as_str() }.render()?;
-    let mut rust_gen_config = OpenOptions::new()
-        .write(true)
-        .create(true)
-        .open(out_dir.join("rust.yml"))?;
-    rust_gen_config.write(content.as_bytes())?;
+    fs::write(out_dir.join("rust.yml"), content)?;
     Ok(())
 }

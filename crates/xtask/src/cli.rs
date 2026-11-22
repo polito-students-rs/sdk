@@ -1,5 +1,6 @@
 use anyhow::{Ok, Result};
 use clap::{Parser, Subcommand};
+use crate::overlay::apply_overlays;
 use crate::sync_version::render_rust_gen_config;
 
 /// Wrapper struct that encapsule all command
@@ -15,7 +16,10 @@ pub struct Cli {
 
 #[derive(Subcommand, Debug)]
 enum Commands {
-    SyncVersion
+    /// Render target/codegen/*.yml from spec/codegen with the polito-client version
+    SyncVersion,
+    /// Apply spec/overlays/*.yaml to spec/openapi.yaml into target/codegen/openapi.yaml
+    ApplyOverlays,
 }
 
 impl Cli {
@@ -25,6 +29,7 @@ impl Cli {
             Some(Commands::SyncVersion) => {
                 render_rust_gen_config()
             },
+            Some(Commands::ApplyOverlays) => apply_overlays(),
             None => Ok(())
         }
     }

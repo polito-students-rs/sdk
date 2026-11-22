@@ -1,10 +1,11 @@
 import 'dev/linux/linux.just'
 import 'dev/windows/windows.just'
 
-# generate crates/polito-api from spec/openapi.yaml (uses local node_modules)
+# generate crates/polito-api from spec/openapi.yaml + spec/overlays (uses local node_modules)
 [group("gen")]
 codegen:
     cargo xtask sync-version
+    cargo xtask apply-overlays
     npm install
     npm exec --no -- openapi-generator-cli batch --fail-fast "target/codegen/*.yml"
 

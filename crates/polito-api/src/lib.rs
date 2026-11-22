@@ -1,5 +1,6 @@
 #![allow(unused_imports)]
-#![allow(clippy::too_many_arguments)]
+// Generated code: lints are not actionable here (fix via spec/templates or spec/overlays).
+#![allow(clippy::all)]
 
 extern crate serde_repr;
 extern crate serde;

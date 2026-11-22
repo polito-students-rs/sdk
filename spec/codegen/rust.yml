@@ -1,6 +1,6 @@
 '!include': 'shared/common.yml'
 generatorName: rust
-inputSpec: 'spec/openapi.yaml'
+inputSpec: 'target/codegen/openapi.yaml'
 outputDir: 'crates/polito-api'
 templateDir: 'spec/templates'
 additionalProperties:
