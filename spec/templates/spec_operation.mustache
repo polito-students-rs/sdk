@@ -1,0 +1,1 @@
+    Operation { operation_id: {{#operationId}}Some(r#"{{{operationId}}}"#){{/operationId}}{{^operationId}}None{{/operationId}}, path: r#"{{{key}}}"#, security: {{#security.size}}Some(&[{{#security}}&[{{#entrySet}}r#"{{{key}}}"#, {{/entrySet}}], {{/security}}]){{/security.size}}{{^security.size}}None{{/security.size}}, method: 

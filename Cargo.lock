@@ -1321,13 +1321,16 @@ name = "polito-client"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "async-trait",
  "dotenvy",
+ "http",
  "libtest-mimic",
  "polito-api",
  "reqwest",
  "reqwest-middleware",
  "thiserror",
  "tokio",
+ "url",
 ]
 
 [[package]]

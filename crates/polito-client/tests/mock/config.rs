@@ -41,7 +41,10 @@ pub fn unauthenticated() -> Arc<Configuration> {
 /// e.g. `code=500` (only codes declared in the spec) or `dynamic=true`.
 pub fn with_prefer(prefer: &str) -> Arc<Configuration> {
     let mut headers = HeaderMap::new();
-    headers.insert("Prefer", HeaderValue::from_str(prefer).expect("valid header value"));
+    headers.insert(
+        "Prefer",
+        HeaderValue::from_str(prefer).expect("valid header value"),
+    );
     let http = reqwest::Client::builder()
         .default_headers(headers)
         .build()
@@ -53,4 +56,31 @@ pub fn with_prefer(prefer: &str) -> Arc<Configuration> {
         client: reqwest_middleware::ClientBuilder::new(http).build(),
         ..Default::default()
     })
+}
+
+/// SDK client pointing at the mock server, not logged in.
+pub fn sdk() -> polito_client::PolitoClient {
+    polito_client::PolitoClient::builder()
+        .base_path(base_url())
+        .build()
+        .expect("sdk client")
+}
+
+/// SDK client that sends `Prefer: <prefer>` on every request.
+pub fn sdk_with_prefer(prefer: &str) -> polito_client::PolitoClient {
+    let mut headers = HeaderMap::new();
+    headers.insert(
+        "Prefer",
+        HeaderValue::from_str(prefer).expect("valid header value"),
+    );
+    let http = reqwest::Client::builder()
+        .default_headers(headers)
+        .build()
+        .expect("reqwest client");
+
+    polito_client::PolitoClient::builder()
+        .base_path(base_url())
+        .http_client(http)
+        .build()
+        .expect("sdk client")
 }

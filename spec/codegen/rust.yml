@@ -15,3 +15,7 @@ openapiGeneratorIgnoreList:
   - .travis.yml
   - git_push.sh
   - .gitignore
+files:
+  spec.mustache:
+    templateType: SupportingFiles
+    destinationFilename: src/spec.rs
