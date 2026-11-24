@@ -1,4 +1,4 @@
-use polito_client::ApiError;
+use polito_client::{ApiError, Device};
 use polito_client::auth::Credentials;
 
 use crate::config;
@@ -140,4 +140,45 @@ pub async fn random_login_payloads_deserialize() {
             .await
             .expect("dynamic payload did not deserialize");
     }
+}
+
+/// A device set on the builder replaces the default one.
+pub async fn login_with_custom_device() {
+    let sdk = config::sdk_builder()
+        .device(Device::new(
+            "android".to_owned(),
+            "14".to_owned(),
+            "Pixel 8".to_owned(),
+            false,
+        ))
+        .build()
+        .expect("sdk client");
+
+    sdk.auth().login(credentials()).await.expect("login failed");
+
+    assert!(sdk.is_authenticated());
+}
+
+/// Upstream answers 500 "Missing required params (device_platform,
+/// device_version,device_model)": the overlay makes the mock reject these
+/// bodies too, so the generated types cannot drift back to optional.
+pub async fn login_without_device_info_is_rejected() {
+    let base = r#""username":"s123456","password":"password","loginType":"basic","preferences":{}"#;
+    let bodies = [
+        format!("{{{base}}}"),
+        format!(r#"{{{base},"device":{{"platform":"linux","model":"m","toothPicCompatible":false}}}}"#),
+        format!(r#"{{{base},"device":{{"platform":"linux","version":"1","toothPicCompatible":false}}}}"#),
+    ];
+
+    for body in bodies {
+        let status = config::post_json("/auth/login", body.clone()).await;
+        assert!(status.is_client_error(), "{body} accepted with {status}");
+    }
+
+    // control: the same body with a complete device is accepted
+    let complete = format!(
+        r#"{{{base},"device":{{"platform":"linux","version":"1","model":"m","toothPicCompatible":false}}}}"#
+    );
+    let status = config::post_json("/auth/login", complete).await;
+    assert!(status.is_success(), "complete body rejected with {status}");
 }

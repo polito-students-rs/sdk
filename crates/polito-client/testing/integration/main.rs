@@ -1,9 +1,10 @@
-//! Integration tests against a Prism mock of `spec/openapi.yaml`.
+//! Integration tests against a Prism mock of `spec/openapi.yaml` with the
+//! overlays applied (`target/codegen/openapi.yaml`).
 //!
 //! Custom runner (`harness = false`): starts the mock (or reuses one already
 //! running, e.g. `just mock`), runs the tests, then stops it. Runs with plain
-//! `cargo test`; `just test-mock` runs only this target. Usual libtest
-//! arguments work, e.g. `cargo test --test mock -- announcements`.
+//! `cargo test`; `just test-integration` runs only this target. Usual libtest
+//! arguments work, e.g. `cargo test --test integration -- announcements`.
 //!
 //! To add a test, write an `async fn` in a module and register it in `tests()`.
 
@@ -12,6 +13,7 @@ mod auth;
 mod config;
 mod helpers;
 mod server;
+mod service_link;
 
 use std::future::Future;
 
@@ -66,9 +68,21 @@ fn tests() -> Vec<Trial> {
             auth::login_bad_request_is_rejected,
         ),
         async_test(
+            "auth::login_with_custom_device",
+            auth::login_with_custom_device,
+        ),
+        async_test(
+            "auth::login_without_device_info_is_rejected",
+            auth::login_without_device_info_is_rejected,
+        ),
+        async_test(
             "auth::random_login_payloads_deserialize",
             auth::random_login_payloads_deserialize,
         ),
+        async_test("service_link::links_are_browser_urls", service_link::links_are_browser_urls),
+        async_test("service_link::live_class_id_is_encoded", service_link::live_class_id_is_encoded),
+        async_test("service_link::links_require_login", service_link::links_require_login),
+        async_test("service_link::random_payloads_deserialize", service_link::random_payloads_deserialize),
     ]
 }
 
@@ -101,7 +115,7 @@ where
     Fut: Future<Output = ()>,
 {
     Trial::test(name, move || {
-        let rt = tokio::runtime::Builder::new_current_thread()
+        let rt = tokio::runtime::Builder::new_multi_thread()
             .enable_all()
             .build()?;
         rt.block_on(test());

@@ -1,4 +1,6 @@
-//! Generic data from the OpenAPI document.
+//! Data from the OpenAPI document: servers and per-operation security.
+//!
+//! Generated from `spec/templates/spec.mustache`: edit the template, not this file.
 
 /// A server declared in `servers`.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -7,6 +9,8 @@ pub struct Server {
     pub description: &'static str,
 }
 
+/// One alternative of a `security` list: the names of the schemes that must
+/// all be satisfied. An empty requirement (`{}`) means anonymous access.
 pub type SecurityRequirement = &'static [&'static str];
 
 /// An operation declared in `paths`.
@@ -49,6 +53,9 @@ pub const SERVERS: &[Server] = &[
         description: r#"Mock server (uses example data)"#,
     },
 ];
+
+/// The first server is the default one, as in the OpenAPI specification.
+pub const DEFAULT_SERVER: &Server = &SERVERS[0];
 
 /// Top-level `security`.
 pub const GLOBAL_SECURITY: &[SecurityRequirement] = &[

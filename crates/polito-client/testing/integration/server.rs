@@ -5,6 +5,10 @@
 //! already listening at that address (e.g. `just mock`),
 //! it is reused; otherwise Prism is started from the local `node_modules` and
 //! stopped when the guard is dropped.
+//!
+//! Prism serves the spec with the overlays applied (`target/codegen/openapi.yaml`,
+//! written by `cargo xtask apply-overlays`): the same document `polito-api` is
+//! generated from.
 
 use std::fs::File;
 use std::net::{SocketAddr, TcpStream, ToSocketAddrs};
@@ -17,6 +21,7 @@ use anyhow::{Context, Result, bail, ensure};
 use crate::helpers::{load_dotenv, workspace_root};
 
 const STARTUP_TIMEOUT: Duration = Duration::from_secs(60);
+const SPEC_PATH: &str = "target/codegen/openapi.yaml";
 
 pub struct MockServer {
     base_url: String,
@@ -50,6 +55,11 @@ impl MockServer {
             prism.display()
         );
 
+        ensure!(
+            root.join(SPEC_PATH).exists(),
+            "{SPEC_PATH} not found: run `cargo xtask apply-overlays` (or `just codegen`)"
+        );
+
         let log_path = root.join("target/prism-mock.log");
         let log = File::create(&log_path)
             .with_context(|| format!("cannot create {}", log_path.display()))?;
@@ -58,7 +68,7 @@ impl MockServer {
         eprintln!("mock: starting Prism at {base_url} (log: {})", log_path.display());
         let child = Command::new("node")
             .arg(&prism)
-            .args(["mock", "--errors", "-h", &ip, "-p", &port.to_string(), "spec/openapi.yaml"])
+            .args(["mock", "--errors", "-h", &ip, "-p", &port.to_string(), SPEC_PATH])
             .current_dir(&root)
             .stdin(Stdio::null())
             .stdout(log)

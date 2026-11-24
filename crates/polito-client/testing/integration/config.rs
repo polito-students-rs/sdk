@@ -60,10 +60,25 @@ pub fn with_prefer(prefer: &str) -> Arc<Configuration> {
 
 /// SDK client pointing at the mock server, not logged in.
 pub fn sdk() -> polito_client::PolitoClient {
-    polito_client::PolitoClient::builder()
-        .base_path(base_url())
-        .build()
-        .expect("sdk client")
+    sdk_builder().build().expect("sdk client")
+}
+
+/// SDK builder pointing at the mock server, to customise before `build`.
+pub fn sdk_builder() -> polito_client::PolitoClientBuilder {
+    polito_client::PolitoClient::builder().base_path(base_url())
+}
+
+/// Raw JSON `POST`, bypassing the generated types, e.g. to send bodies they
+/// cannot express. Returns the status only.
+pub async fn post_json(path: &str, body: String) -> reqwest::StatusCode {
+    reqwest::Client::new()
+        .post(format!("{}{path}", base_url()))
+        .header(reqwest::header::CONTENT_TYPE, "application/json")
+        .body(body)
+        .send()
+        .await
+        .expect("request failed")
+        .status()
 }
 
 /// SDK client that sends `Prefer: <prefer>` on every request.
