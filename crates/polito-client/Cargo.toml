@@ -17,9 +17,15 @@ url = "2.5"
 anyhow = "1.0"
 dotenvy = "0.15.7"
 libtest-mimic = "0.8.2"
+rpassword = "7.5"
 
-# integration tests against a Prism mock
 [[test]]
-name = "mock"
-path = "tests/mock/main.rs"
+name = "integration"
+path = "testing/integration/main.rs"
 harness = false
+
+[[test]]
+name = "e2e"
+path = "testing/e2e/main.rs"
+harness = false
+test = false

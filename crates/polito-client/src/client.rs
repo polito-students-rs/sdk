@@ -11,6 +11,7 @@ use crate::session::{Session, SessionStore};
 
 /// First server of the spec (production).
 const DEFAULT_BASE_PATH: &str = polito_api::spec::SERVERS[0].url;
+const DEFAULT_DEVICE_MODEL: &str = "polito-client";
 const DEFAULT_USER_AGENT: &str = concat!("polito-client/", env!("CARGO_PKG_VERSION"));
 
 /// Entry point of the SDK.
@@ -23,7 +24,7 @@ pub struct PolitoClient {
     pub(crate) session: SessionStore,
     pub(crate) auth_api: Arc<dyn AuthApi>,
     pub(crate) app: Option<AppInfo>,
-    pub(crate) device: Option<Device>,
+    pub(crate) device: Device,
     pub(crate) language: Option<Language>,
 }
 
@@ -80,6 +81,9 @@ impl PolitoClientBuilder {
         self
     }
 
+    /// Device sent on login and career switch. The server requires one:
+    /// defaults to platform = host OS, version = SDK version,
+    /// model = `polito-client`.
     pub fn device(mut self, device: Device) -> Self {
         self.device = Some(device);
         self
@@ -124,9 +128,23 @@ impl PolitoClientBuilder {
             session,
             auth_api: Arc::new(AuthApiClient::new(configuration)),
             app: self.app,
-            device: self.device,
+            device: self.device.unwrap_or_else(default_device),
             language: self.language,
         })
+    }
+}
+
+/// Device used when none is set on the builder: the server rejects a login
+/// without platform, version and model.
+fn default_device() -> Device {
+    Device {
+        name: Some(DEFAULT_DEVICE_MODEL.to_owned()),
+        ..Device::new(
+            std::env::consts::OS.to_owned(),
+            env!("CARGO_PKG_VERSION").to_owned(),
+            DEFAULT_DEVICE_MODEL.to_owned(),
+            false,
+        )
     }
 }
 

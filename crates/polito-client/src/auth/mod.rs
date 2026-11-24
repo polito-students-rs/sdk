@@ -5,6 +5,7 @@ mod mfa;
 mod service_link;
 
 pub use login::Credentials;
+pub use service_link::ServiceLink;
 
 use crate::client::PolitoClient;
 

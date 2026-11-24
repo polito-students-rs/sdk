@@ -85,7 +85,7 @@ impl Auth<'_> {
         let request = SwitchCareerRequest {
             username: username.into(),
             client: self.client.app.clone().map(Box::new),
-            device: self.client.device.clone().map(Box::new),
+            device: Some(Box::new(self.client.device.clone())),
         };
         let response = self.client.auth_api.auth_switch_career(request).await?;
         Ok(self.store(*response.data))
@@ -99,7 +99,7 @@ impl Auth<'_> {
 
     fn login_request(&self, credentials: Credentials) -> LoginRequest {
         let client = self.client.app.clone().map(Box::new);
-        let device = self.client.device.clone().map(Box::new);
+        let device = Box::new(self.client.device.clone());
         let preferences = Box::new(UpdatePreferencesRequest {
             language: self.client.language,
         });
