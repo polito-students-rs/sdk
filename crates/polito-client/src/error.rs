@@ -22,6 +22,14 @@ pub enum ApiError {
     Io(#[from] std::io::Error),
     #[error("invalid base path {0:?}: expected an absolute http(s) URL")]
     InvalidBasePath(String),
+    #[error("invalid MFA key")]
+    InvalidMfaKey,
+    #[error("failed to sign the MFA challenge")]
+    FailedMfaSignature,
+    #[error("MFA challenge belongs to another authenticator")]
+    MfaDifferentSerial,
+    #[error("MFA answer not accepted by the server")]
+    MfaValidationFailed,
 }
 
 impl From<reqwest_middleware::Error> for ApiError {

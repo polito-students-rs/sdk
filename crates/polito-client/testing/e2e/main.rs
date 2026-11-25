@@ -17,6 +17,7 @@
 
 mod auth;
 mod helpers;
+mod mfa;
 mod service_link;
 mod setup;
 
@@ -52,6 +53,17 @@ fn tests(run: &Option<(Handle, Setup)>) -> Vec<Trial> {
         async_test(
             "service_link::live_class_link",
             service_link::live_class_link,
+            run,
+        ),
+        async_test("mfa::status_is_readable", mfa::status_is_readable, run),
+        async_test(
+            "mfa::status_details_follow_spec",
+            mfa::status_details_follow_spec,
+            run,
+        ),
+        async_test(
+            "mfa::pending_challenge_is_readable",
+            mfa::pending_challenge_is_readable,
             run,
         ),
         async_test(

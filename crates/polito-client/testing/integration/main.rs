@@ -12,6 +12,7 @@ mod announcements;
 mod auth;
 mod config;
 mod helpers;
+mod mfa;
 mod server;
 mod service_link;
 
@@ -78,6 +79,24 @@ fn tests() -> Vec<Trial> {
         async_test(
             "auth::random_login_payloads_deserialize",
             auth::random_login_payloads_deserialize,
+        ),
+        async_test("mfa::status_maps_spec_example", mfa::status_maps_spec_example),
+        async_test(
+            "mfa::pending_challenge_maps_spec_example",
+            mfa::pending_challenge_maps_spec_example,
+        ),
+        async_test(
+            "mfa::enrol_then_approve_and_decline",
+            mfa::enrol_then_approve_and_decline,
+        ),
+        async_test(
+            "mfa::restored_key_answers_only_its_challenges",
+            mfa::restored_key_answers_only_its_challenges,
+        ),
+        async_test("mfa::mfa_requires_login", mfa::mfa_requires_login),
+        async_test(
+            "mfa::random_payloads_are_handled",
+            mfa::random_payloads_are_handled,
         ),
         async_test("service_link::links_are_browser_urls", service_link::links_are_browser_urls),
         async_test("service_link::live_class_id_is_encoded", service_link::live_class_id_is_encoded),
