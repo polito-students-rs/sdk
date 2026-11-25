@@ -2,11 +2,13 @@
 
 mod login;
 mod mfa;
+mod sso;
 mod service_link;
 
 pub use login::Credentials;
 pub use service_link::ServiceLink;
 pub use mfa::{Challenge, Mfa, MfaDetails, MfaKey, MfaStatus};
+pub use sso::SsoLogin;
 
 use crate::client::PolitoClient;
 

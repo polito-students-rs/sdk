@@ -98,6 +98,7 @@ fn tests() -> Vec<Trial> {
             "mfa::random_payloads_are_handled",
             mfa::random_payloads_are_handled,
         ),
+        async_test("auth::sso_redirect_logs_in", auth::sso_redirect_login),
         async_test("service_link::links_are_browser_urls", service_link::links_are_browser_urls),
         async_test("service_link::live_class_id_is_encoded", service_link::live_class_id_is_encoded),
         async_test("service_link::links_require_login", service_link::links_require_login),

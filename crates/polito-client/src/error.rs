@@ -30,6 +30,11 @@ pub enum ApiError {
     MfaDifferentSerial,
     #[error("MFA answer not accepted by the server")]
     MfaValidationFailed,
+    #[error("system random number generator unavailable")]
+    RandomUnavailable,
+    /// The redirect carries the SSO key: no details.
+    #[error("invalid SSO redirect")]
+    InvalidSsoRedirect,
 }
 
 impl From<reqwest_middleware::Error> for ApiError {

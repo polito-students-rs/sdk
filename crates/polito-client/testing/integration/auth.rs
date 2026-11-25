@@ -182,3 +182,15 @@ pub async fn login_without_device_info_is_rejected() {
     let status = config::post_json("/auth/login", complete).await;
     assert!(status.is_success(), "complete body rejected with {status}");
 }
+
+/// The credentials read from the final SSO redirect log in.
+pub async fn sso_redirect_login() {
+    let sdk = config::sdk();
+    let sso = sdk.auth().sso_login(true).expect("sso login");
+    let redirect = format!("polito://students/login?uid={}&key=mock-key", sso.uid());
+
+    let credentials = sso.credentials(&redirect).expect("redirect");
+    sdk.auth().login(credentials).await.expect("sso login failed");
+
+    assert!(sdk.is_authenticated());
+}
