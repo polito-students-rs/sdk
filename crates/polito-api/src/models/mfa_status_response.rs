@@ -16,15 +16,15 @@ pub struct MfaStatusResponse {
     /// Current MFA status for the user
     #[serde(rename = "status")]
     pub status: Status,
-    #[serde(rename = "details", deserialize_with = "Option::deserialize")]
+    #[serde(rename = "details", skip_serializing_if = "Option::is_none")]
     pub details: Option<Box<models::MfaStatusResponseDetails>>,
 }
 
 impl MfaStatusResponse {
-    pub fn new(status: Status, details: Option<models::MfaStatusResponseDetails>) -> MfaStatusResponse {
+    pub fn new(status: Status) -> MfaStatusResponse {
         MfaStatusResponse {
             status,
-            details: if let Some(x) = details {Some(Box::new(x))} else {None},
+            details: None,
         }
     }
 }

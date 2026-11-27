@@ -17,10 +17,10 @@ pub struct Device {
     pub name: Option<String>,
     #[serde(rename = "platform")]
     pub platform: String,
-    #[serde(rename = "version", skip_serializing_if = "Option::is_none")]
-    pub version: Option<String>,
-    #[serde(rename = "model", skip_serializing_if = "Option::is_none")]
-    pub model: Option<String>,
+    #[serde(rename = "version")]
+    pub version: String,
+    #[serde(rename = "model")]
+    pub model: String,
     #[serde(rename = "manufacturer", skip_serializing_if = "Option::is_none")]
     pub manufacturer: Option<String>,
     #[serde(rename = "toothPicCompatible")]
@@ -28,12 +28,12 @@ pub struct Device {
 }
 
 impl Device {
-    pub fn new(platform: String, tooth_pic_compatible: bool) -> Device {
+    pub fn new(platform: String, version: String, model: String, tooth_pic_compatible: bool) -> Device {
         Device {
             name: None,
             platform,
-            version: None,
-            model: None,
+            version,
+            model,
             manufacturer: None,
             tooth_pic_compatible,
         }

@@ -1,0 +1,16 @@
+overlay: 1.0.0
+info:
+  title: Device info required on login
+  version: 1.0.0
+actions:
+  - target: $.components.schemas.LoginRequestBase.required
+    description: >-
+      upstream declares `device` optional, but login without it fails with
+      500 "Missing required params (device_platform,device_version,device_model)"
+    update: device
+  - target: $.components.schemas.Device.required
+    description: login rejects a device without `version` (device_version)
+    update: version
+  - target: $.components.schemas.Device.required
+    description: login rejects a device without `model` (device_model)
+    update: model

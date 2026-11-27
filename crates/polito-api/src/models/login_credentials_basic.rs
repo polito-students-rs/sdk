@@ -15,8 +15,8 @@ use serde::{Deserialize, Serialize};
 pub struct LoginCredentialsBasic {
     #[serde(rename = "client", skip_serializing_if = "Option::is_none")]
     pub client: Option<Box<models::Client>>,
-    #[serde(rename = "device", skip_serializing_if = "Option::is_none")]
-    pub device: Option<Box<models::Device>>,
+    #[serde(rename = "device")]
+    pub device: Box<models::Device>,
     #[serde(rename = "preferences")]
     pub preferences: Box<models::UpdatePreferencesRequest>,
     #[serde(rename = "username")]
@@ -28,10 +28,10 @@ pub struct LoginCredentialsBasic {
 }
 
 impl LoginCredentialsBasic {
-    pub fn new(preferences: models::UpdatePreferencesRequest, username: String, password: String, login_type: LoginType) -> LoginCredentialsBasic {
+    pub fn new(device: models::Device, preferences: models::UpdatePreferencesRequest, username: String, password: String, login_type: LoginType) -> LoginCredentialsBasic {
         LoginCredentialsBasic {
             client: None,
-            device: None,
+            device: Box::new(device),
             preferences: Box::new(preferences),
             username,
             password,

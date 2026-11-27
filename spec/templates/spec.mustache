@@ -1,0 +1,93 @@
+//! Data from the OpenAPI document: servers and per-operation security.
+//!
+//! Generated from `spec/templates/spec.mustache`: edit the template, not this file.
+
+/// A server declared in `servers`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Server {
+    pub url: &'static str,
+    pub description: &'static str,
+}
+
+/// One alternative of a `security` list: the names of the schemes that must
+/// all be satisfied. An empty requirement (`{}`) means anonymous access.
+pub type SecurityRequirement = &'static [&'static str];
+
+/// An operation declared in `paths`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Operation {
+    pub operation_id: Option<&'static str>,
+    /// Uppercase HTTP method, e.g. `GET`.
+    pub method: &'static str,
+    /// Path template relative to the server URL, e.g. `/courses/{courseId}`.
+    pub path: &'static str,
+    /// Operation-level `security`; `None` inherits [`GLOBAL_SECURITY`].
+    pub security: Option<&'static [SecurityRequirement]>,
+}
+
+impl Operation {
+    /// Security that applies to the operation, after inheritance.
+    pub fn effective_security(&self) -> &'static [SecurityRequirement] {
+        match self.security {
+            Some(security) => security,
+            None => GLOBAL_SECURITY,
+        }
+    }
+
+    /// True when the operation can be called without credentials: no
+    /// requirement at all, or an empty alternative (`security: [{}]`).
+    pub fn allows_anonymous(&self) -> bool {
+        let security = self.effective_security();
+        security.is_empty() || security.iter().any(|requirement| requirement.is_empty())
+    }
+}
+
+/// Servers in declaration order.
+pub const SERVERS: &[Server] = &[
+{{#servers}}
+    Server {
+        url: r#"{{{url}}}"#,
+        description: r#"{{{description}}}"#,
+    },
+{{/servers}}
+];
+
+/// The first server is the default one, as in the OpenAPI specification.
+pub const DEFAULT_SERVER: &Server = &SERVERS[0];
+
+/// Top-level `security`.
+pub const GLOBAL_SECURITY: &[SecurityRequirement] = &[
+{{#openAPI.security}}
+    &[{{#entrySet}}r#"{{{key}}}"#, {{/entrySet}}],
+{{/openAPI.security}}
+];
+
+/// Every operation, in declaration order.
+pub const OPERATIONS: &[Operation] = &[
+{{#openAPI.paths.entrySet}}
+{{#value.get}}
+{{>spec_operation}}"GET" },
+{{/value.get}}
+{{#value.put}}
+{{>spec_operation}}"PUT" },
+{{/value.put}}
+{{#value.post}}
+{{>spec_operation}}"POST" },
+{{/value.post}}
+{{#value.delete}}
+{{>spec_operation}}"DELETE" },
+{{/value.delete}}
+{{#value.options}}
+{{>spec_operation}}"OPTIONS" },
+{{/value.options}}
+{{#value.head}}
+{{>spec_operation}}"HEAD" },
+{{/value.head}}
+{{#value.patch}}
+{{>spec_operation}}"PATCH" },
+{{/value.patch}}
+{{#value.trace}}
+{{>spec_operation}}"TRACE" },
+{{/value.trace}}
+{{/openAPI.paths.entrySet}}
+];

@@ -1,0 +1,19 @@
+overlay: 1.0.0
+info:
+  title: MFA status details optional
+  version: 1.0.0
+actions:
+  - target: $.components.schemas.MfaStatusResponse
+    description: >-
+      upstream omits `details` unless status is `active` or `locked`, as the
+      property description says, but the schema lists it as required.
+      Replaces the whole `required` list: keep it in sync with upstream
+    update:
+      required:
+        - status
+  - target: $.components.schemas.MfaStatusResponse.properties.details
+    description: >-
+      optional is enough: nullable and optional together generate a double
+      `Option`, while a plain `Option` accepts both a missing key and null
+    update:
+      nullable: false

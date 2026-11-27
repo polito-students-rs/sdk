@@ -236,3 +236,4 @@ src/models/virtual_classroom_base.rs
 src/models/virtual_classroom_live.rs
 src/models/virtual_classroom_recording.rs
 src/models/year_statistics.rs
+src/spec.rs

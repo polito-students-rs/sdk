@@ -3,5 +3,5 @@ resolver = "3"
 members = [
     "crates/xtask",
     "crates/polito-client",
-    "crates/polito-api"
+    "crates/polito-api",
 ]

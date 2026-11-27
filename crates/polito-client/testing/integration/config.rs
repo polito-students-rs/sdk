@@ -41,7 +41,10 @@ pub fn unauthenticated() -> Arc<Configuration> {
 /// e.g. `code=500` (only codes declared in the spec) or `dynamic=true`.
 pub fn with_prefer(prefer: &str) -> Arc<Configuration> {
     let mut headers = HeaderMap::new();
-    headers.insert("Prefer", HeaderValue::from_str(prefer).expect("valid header value"));
+    headers.insert(
+        "Prefer",
+        HeaderValue::from_str(prefer).expect("valid header value"),
+    );
     let http = reqwest::Client::builder()
         .default_headers(headers)
         .build()
@@ -53,4 +56,46 @@ pub fn with_prefer(prefer: &str) -> Arc<Configuration> {
         client: reqwest_middleware::ClientBuilder::new(http).build(),
         ..Default::default()
     })
+}
+
+/// SDK client pointing at the mock server, not logged in.
+pub fn sdk() -> polito_client::PolitoClient {
+    sdk_builder().build().expect("sdk client")
+}
+
+/// SDK builder pointing at the mock server, to customise before `build`.
+pub fn sdk_builder() -> polito_client::PolitoClientBuilder {
+    polito_client::PolitoClient::builder().base_path(base_url())
+}
+
+/// Raw JSON `POST`, bypassing the generated types, e.g. to send bodies they
+/// cannot express. Returns the status only.
+pub async fn post_json(path: &str, body: String) -> reqwest::StatusCode {
+    reqwest::Client::new()
+        .post(format!("{}{path}", base_url()))
+        .header(reqwest::header::CONTENT_TYPE, "application/json")
+        .body(body)
+        .send()
+        .await
+        .expect("request failed")
+        .status()
+}
+
+/// SDK client that sends `Prefer: <prefer>` on every request.
+pub fn sdk_with_prefer(prefer: &str) -> polito_client::PolitoClient {
+    let mut headers = HeaderMap::new();
+    headers.insert(
+        "Prefer",
+        HeaderValue::from_str(prefer).expect("valid header value"),
+    );
+    let http = reqwest::Client::builder()
+        .default_headers(headers)
+        .build()
+        .expect("reqwest client");
+
+    polito_client::PolitoClient::builder()
+        .base_path(base_url())
+        .http_client(http)
+        .build()
+        .expect("sdk client")
 }
